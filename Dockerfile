@@ -19,4 +19,4 @@ EXPOSE 80
 
 # Lancement de l'API
 # Attention : ne pas lancer en daemon !
-CMD ["uv", "run", "gunicorn", "app:app", "-b", "0.0.0.0:80", "-w", "4"]
+CMD ["sh", "-c", "uv run gunicorn app:app -b 0.0.0.0:${PORT:-8080} -w 1 --threads 4 --timeout 120"]
