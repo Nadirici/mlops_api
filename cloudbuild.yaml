@@ -29,8 +29,8 @@ steps:
       - 'main-vpc-connector'
       - '--vpc-egress'
       - 'all-traffic'
-      
-      - '--clear-network-interfaces'
+      - '--network'
+      - 'none'
 
 # Correctif pour l'échec de build (Option C du message d'erreur précédent)
 options:
