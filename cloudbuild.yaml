@@ -1,11 +1,38 @@
 # Liste des Cloud Builders : https://console.cloud.google.com/gcr/images/cloud-builders/GLOBAL
 steps:
-- name: "gcr.io/cloud-builders/docker"
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA', '.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA']
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: gcloud
-  args: ['run', 'deploy', 'purchase-predict-api', '--image', 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA', '--region', 'europe-west1', '--platform', 'managed']
+  # 1. Construction de l'image Docker
+  - name: "gcr.io/cloud-builders/docker"
+    id: BUILD
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA', '.']
+
+  # 2. Push de l'image sur Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: PUSH
+    args: ['push', 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA']
+
+  # 3. Déploiement sur Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: DEPLOY
+    entrypoint: gcloud
+    args: 
+      - 'run'
+      - 'deploy'
+      - 'purchase-predict-api'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA'
+      - '--region'
+      - 'us-central1' # ⚠️ Vérifie bien ta région (us-central1 ou europe-west1 ?)
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated' # Pour permettre l'accès public
+      - '--vpc-connector'
+      - 'main-vpc-connector' # 👈 Indispensable pour garder le lien avec MLflow !
+      - '--vpc-egress'
+      - 'all-traffic'
+
+# Correctif pour l'échec de build (Option C du message d'erreur précédent)
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 images:
-- gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA
+  - 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA'
