@@ -3,12 +3,12 @@ steps:
   # 1. Construction de l'image Docker
   - name: "gcr.io/cloud-builders/docker"
     id: BUILD
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA', '.']
 
   # 2. Push de l'image sur Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     id: PUSH
-    args: ['push', 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA']
+    args: ['push', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA']
 
   # 3. Déploiement sur Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -17,24 +17,22 @@ steps:
     args: 
       - 'run'
       - 'deploy'
-      - 'purchase-predict-api'
+      - '$_SERVICE_NAME'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA'
+      - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
       - '--region'
-      - 'us-central1'
+      - '$_REGION'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
       - '--vpc-connector'
-      - 'main-vpc-connector'
+      - '$_VPC_CONNECTOR'
       - '--vpc-egress'
       - 'all-traffic'
-      - '--network'
-      - 'none'
 
-# Correctif pour l'échec de build (Option C du message d'erreur précédent)
+# Correctif pour l'échec de build
 options:
   logging: CLOUD_LOGGING_ONLY
 
 images:
-  - 'gcr.io/$PROJECT_ID/purchase-predict-api:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
