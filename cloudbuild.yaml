@@ -30,7 +30,7 @@ steps:
       - '--vpc-egress'
       - 'all-traffic'
 
-# Correctif pour l'échec de build
+# Correctif pour les logs avec compte de service personnalisé
 options:
   logging: CLOUD_LOGGING_ONLY
 
