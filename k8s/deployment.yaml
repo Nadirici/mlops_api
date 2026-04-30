@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: pod-purchase-predict
-        image: image: gcr.io/mlops-489713/purchase-predict-api:DOCKER_TAG
+        image: gcr.io/mlops-489713/purchase-predict-api:DOCKER_TAG
         env:
         - name: PORT
           value: "80"
