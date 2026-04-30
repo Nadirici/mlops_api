@@ -22,27 +22,6 @@ steps:
     args: ['push', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:latest']
     waitFor: ["TAG_LATEST"]
 
-  # 3. Déploiement sur Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    id: DEPLOY
-    entrypoint: gcloud
-    args: 
-      - 'run'
-      - 'deploy'
-      - '$_SERVICE_NAME'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA'
-      - '--region'
-      - '$_REGION'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
-      - '--vpc-connector'
-      - '$_VPC_CONNECTOR'
-      - '--vpc-egress'
-      - 'all-traffic'
-    waitFor: ["PUSH_LATEST"]
-
 options:
   logging: CLOUD_LOGGING_ONLY
 
