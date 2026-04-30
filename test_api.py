@@ -13,9 +13,10 @@ dataset = dataset.drop(["user_session", "user_id", "purchased"], axis=1)
 sample = dataset.sample(n=10).fillna("unknown")
 
 response = requests.post(
-    "https://purchase-predict-api-736850329675.us-central1.run.app/predict",
+    "http://34.128.173.103/predict",
     json=sample.to_dict(orient="records")
 )
+
 
 print(response.status_code)
 print(response.text)
