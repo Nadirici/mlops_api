@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: api-purchase
+data:
+  MLFLOW_SERVER: "http://34.45.248.86/"
