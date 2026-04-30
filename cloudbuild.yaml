@@ -37,3 +37,6 @@ options:
 
 images:
   - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$SHORT_SHA' 
+
+
+  
